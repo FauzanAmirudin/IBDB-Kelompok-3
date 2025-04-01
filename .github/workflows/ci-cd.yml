@@ -61,3 +61,21 @@ jobs:
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+          deploy:
+            needs: build-and-test
+            runs-on: ubuntu-latest
+            steps:
+              - name: Checkout repository
+                uses: actions/checkout@v3
+
+              - name: Deploy to Netlify
+                uses: nwtgck/actions-netlify@v2
+                with:
+                  publish-dir: "./dist" # Sesuaikan dengan folder output build proyek
+                  production-branch: main
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+                  deploy-message: "Automated deployment"
+                  enable-pull-request-comment: true
+                  netlify-auth-token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+                  site-id: ${{ secrets.NETLIFY_SITE_ID }}
